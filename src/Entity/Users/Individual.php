@@ -10,4 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Individual extends ProjectHolder
 {
 
+    public function getRoles():array
+    {
+        return ["Individual"];
+    }
 }

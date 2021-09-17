@@ -8,23 +8,25 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  *  @ORM\Entity()
  */
-class PostulationDetail
+class Enclosed
 {
 
     use IdTrait;
 
+    /**
+     * @ORM\Column(type="string", length=255,nullable=false)
+     */
+    private ?string $name = null;
 
     /**
      * @ORM\Column(type="text",nullable=false)
      */
-    protected ?string $message = null;
+    private ?string $file = null;
 
     /**
-     * @ORM\Column(type="datetime",nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Job\PostulationDetail", inversedBy="enclosed")
      */
-    protected ?\DateTimeInterface $createdAt = null;
-
-
+    private PostulationDetail $postulationDetail;
 
 
 }
