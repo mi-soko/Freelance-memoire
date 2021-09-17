@@ -8,15 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Valid;
-
-/**
- * @ORM\Entity()
- * @UniqueEntity("email")
- * @method string getUserIdentifier()
- */
 
 #[
     ApiResource(
@@ -29,6 +22,10 @@ use Symfony\Component\Validator\Constraints\Valid;
         ]
     )
 ]
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\Users\FreelancerRepository")
+ */
 class Freelancer extends User
 {
 
@@ -43,7 +40,6 @@ class Freelancer extends User
      */
     #[NotBlank(groups: ['profile'])]
     private ?string $speciality = null;
-
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Skills\Experience",mappedBy="freelancer",cascade={"remove"})
@@ -184,11 +180,4 @@ class Freelancer extends User
         $this->postulations = $postulations;
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
 }

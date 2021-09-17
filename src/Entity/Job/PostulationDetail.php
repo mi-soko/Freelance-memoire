@@ -13,7 +13,7 @@ use JetBrains\PhpStorm\Pure;
 
 /**
  *  @ORM\Entity()
- * @ORM\Table(
+ *  @ORM\Table(
     uniqueConstraints={
     @ORM\UniqueConstraint(name="freelancers_offer_unique", columns={"freelancers_id", "offer_id"})
     }

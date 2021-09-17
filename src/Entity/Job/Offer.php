@@ -5,6 +5,7 @@ namespace App\Entity\Job;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\IdTrait;
 use App\Entity\Users\ProjectHolder;
+use App\Entity\Users\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -59,10 +60,10 @@ class Offer
     private Collection $languages;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Users\ProjectHolder", inversedBy="offers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Users\User", inversedBy="offers")
      */
     #[Assert\Valid]
-    private ProjectHolder $owner;
+    private User $owner;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Job\PostulationDetail", mappedBy="offer")

@@ -5,21 +5,30 @@ declare(strict_types=1);
 namespace App\Entity\Users;
 
 use App\Entity\IdTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
-
+use Symfony\Component\Validator\Constraints\Valid;
+use App\Repository\Users\UserRepository;
 /**
  * @method string getUserIdentifier()
+ * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email",repositoryMethod="findByUniqueEmail")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\DiscriminatorMap({"enterprise" = "Enterprise", "individual" = "Individual","freelancer" = "Freelancer"})
  */
-abstract class User implements UserInterface
+abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     use IdTrait;
-
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
@@ -51,13 +60,20 @@ abstract class User implements UserInterface
     /**
      * @ORM\Column(type="datetime",nullable=false)
      */
-    private ?\DateTimeInterface $createdAt = null;
+    protected ?\DateTimeInterface $createdAt = null;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Job\Offer", mappedBy="owner")
+     */
+    #[Valid(groups: ['profile'])]
+    protected Collection $offers;
 
     public function __construct()
     {
+        $this->offers = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
+
 
     public function getPassword():string
     {
