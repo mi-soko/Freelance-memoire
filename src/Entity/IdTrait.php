@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait IdTrait
 {
@@ -12,12 +13,13 @@ trait IdTrait
      * @ORM\Id()
      * @ORM\Column(type="bigint")
      */
-    protected int $id;
+    #[Groups(["read:id","Default"])]
+    protected ?int $id = null;
 
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -8,17 +8,27 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Valid;
 
 #[
     ApiResource(
+
         itemOperations: [
-            'GET' => [],
-            'PATCH' => [
-                'denormalization_context' => ['groups' => ['profile','Default']],
+            'PUT' => [
+                'validation_groups' => ["edit:profile"]
             ],
-            'DELETE' => []
+            'DELETE' => [],
+            "GET" => []
+        ],
+        collectionOperations: [
+            "POST" => [
+                'validation_groups' => ['create:user']
+            ]
+        ],
+        normalizationContext: [
+            'groups' => ["read:profile:freelancer","Default"]
         ]
     )
 ]
@@ -32,19 +42,22 @@ class Freelancer extends User
     /**
      * @ORM\Column(type="text",length=255,nullable=true)
      */
-    #[NotBlank(groups: ['profile'])]
+    #[NotBlank(groups: ["edit:profile"])]
+    #[Groups("read:profile:freelancer")]
     private ?string $description = null;
 
     /**
      * @ORM\Column(type="string",length=255,nullable=true)
      */
-    #[NotBlank(groups: ['profile'])]
+    #[NotBlank(groups: ["edit:profile"])]
+    #[Groups(["read:profile:freelancer"])]
     private ?string $speciality = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Skills\Experience",mappedBy="freelancer",cascade={"remove"})
      */
-    #[Valid(groups: ['profile'])]
+    #[Valid(groups: ['edit:profile'])]
+    #[Groups(["read:profile:freelancer"])]
     private Collection $experience;
 
     /**
@@ -52,6 +65,7 @@ class Freelancer extends User
      * @ORM\JoinTable(name="competences_for_freelancers")
      */
     #[Valid(groups: ['profile'])]
+    #[Groups(["read:profile:freelancer"])]
     private Collection $skills;
 
     /**
@@ -59,12 +73,14 @@ class Freelancer extends User
      * @ORM\JoinTable(name="languages_for_freelancers")
      */
     #[Valid(groups: ['profile'])]
+    #[Groups(["read:profile:freelancer"])]
     private Collection $languages;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Job\PostulationDetail", mappedBy="freelancers")
      */
     #[Valid(groups: ['profile'])]
+    #[Groups(["read:profile:freelancer"])]
     private Collection $postulations;
 
 
@@ -78,6 +94,7 @@ class Freelancer extends User
         $this->postulations = new ArrayCollection();
     }
 
+    #[Groups(["read:profile:freelancer"])]
     public function getRoles():array
     {
         return ["Freelancer"];
@@ -179,5 +196,12 @@ class Freelancer extends User
     {
         $this->postulations = $postulations;
     }
+    #[Groups("read:profile:freelancer")]
+    public function getExperienceLength():int
+    {
+        return $this->experience->count();
+    }
+
+
 
 }

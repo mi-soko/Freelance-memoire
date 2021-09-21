@@ -13,11 +13,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
     ApiResource(
         itemOperations: [
             'GET' => [],
-            'PATCH' => [
-                'denormalization_context' => ['groups' => ['profile','Default']],
-            ],
-            'DELETE' => []
-        ]
+            'DELETE' => [],
+            'PUT' => []
+        ],
+        collectionOperations: [
+            "POST" => [
+                'validation_groups' => ['create:user']
+            ]
+        ],
     )
 ]
 class Enterprise extends User
@@ -28,14 +31,14 @@ class Enterprise extends User
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-    #[NotBlank]
-    private ?string $enterpriseName;
+    #[NotBlank(groups: ['create:user',"edit:profile"])]
+    private ?string $enterpriseName = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-    #[NotBlank(groups: ['profile'])]
-    private ?string $legalStatus;
+    #[NotBlank(groups: ['create:user',"edit:profile"])]
+    private ?string $legalStatus = '';
 
     public function getRoles():array
     {
@@ -48,6 +51,22 @@ class Enterprise extends User
     public function getEnterpriseName(): ?string
     {
         return $this->enterpriseName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLegalStatus(): ?string
+    {
+        return $this->legalStatus;
+    }
+
+    /**
+     * @param string|null $legalStatus
+     */
+    public function setLegalStatus(?string $legalStatus): void
+    {
+        $this->legalStatus = $legalStatus;
     }
 
     /**

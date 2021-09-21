@@ -17,7 +17,7 @@ class FreelancerRepository extends ServiceEntityRepository
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Individual::class);
+        parent::__construct($registry, Freelancer::class);
     }
 
 }

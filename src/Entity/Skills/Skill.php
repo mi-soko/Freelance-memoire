@@ -35,7 +35,6 @@ class Skill
 
     #[Pure] public function __construct()
     {
-
         $this->freelancers = new ArrayCollection();
     }
 

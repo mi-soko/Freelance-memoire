@@ -8,10 +8,10 @@ use App\Entity\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -32,40 +32,45 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-    #[NotBlank]
+    #[NotBlank(groups: ['create:user',"edit:profile"])]
+    #[Groups("Default")]
     protected ?string $firstName = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-    #[NotBlank]
+    #[NotBlank(groups: ['create:user',"edit:profile"])]
+    #[Groups("Default")]
     protected ?string $lastName = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-    #[NotBlank,Email]
+    #[Groups("Default")]
+    #[NotBlank(groups: ['create:user',"edit:profile"]),Email(groups: ['create:user',"edit:profile"])]
     protected ?string $email = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-
     protected ?string $password = '';
 
-    #[NotBlank]
-    #[Length(min: 8, max: 4096)]
+    #[NotBlank(groups: ['create:user'])]
+    #[Length(min: 8, max: 4096, groups: ['create:user'])]
+
     public ?string $plainPassword = null;
 
     /**
      * @ORM\Column(type="datetime",nullable=false)
      */
+    #[Groups("Default")]
     protected ?\DateTimeInterface $createdAt = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Job\Offer", mappedBy="owner")
      */
     #[Valid(groups: ['profile'])]
+    #[Groups("Default")]
     protected Collection $offers;
 
     public function __construct()
@@ -90,11 +95,11 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
+    #[Groups("Default")]
     public function getUsername():string
     {
        return $this->email;
     }
-
 
     /**
      * @return string|null
@@ -144,22 +149,6 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * @param string|null $plainPassword
-     */
-    public function setPlainPassword(?string $plainPassword): void
-    {
-        $this->plainPassword = $plainPassword;
-    }
-
 
     /**
      * @param string|null $password
@@ -185,4 +174,9 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
     }
 
+    #[Groups("Default")]
+    public function getFullName(): string
+    {
+        return sprintf('%s %s',$this->firstName,$this->lastName);
+    }
 }
