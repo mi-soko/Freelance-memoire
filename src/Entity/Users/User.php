@@ -33,20 +33,20 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank(groups: ['create:user',"edit:profile"])]
-    #[Groups("Default")]
+    #[Groups(["Default","read:enterprise","read:profile:freelancer"])]
     protected ?string $firstName = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank(groups: ['create:user',"edit:profile"])]
-    #[Groups("Default")]
+    #[Groups(["Default","read:enterprise","read:profile:freelancer"])]
     protected ?string $lastName = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
-    #[Groups("Default")]
+    #[Groups(["Default","read:enterprise","read:profile:freelancer"])]
     #[NotBlank(groups: ['create:user',"edit:profile"]),Email(groups: ['create:user',"edit:profile"])]
     protected ?string $email = '';
 
@@ -63,14 +63,14 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="datetime",nullable=false)
      */
-    #[Groups("Default")]
+    #[Groups(["Default","read:enterprise","read:offer","read:profile:freelancer"])]
     protected ?\DateTimeInterface $createdAt = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Job\Offer", mappedBy="owner")
-     */
+         */
     #[Valid(groups: ['profile'])]
-    #[Groups("Default")]
+    #[Groups(["Default","read:enterprise"])]
     protected Collection $offers;
 
     public function __construct()
@@ -95,7 +95,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
-    #[Groups("Default")]
+    #[Groups(["Default","read:enterprise","read:profile:freelancer"])]
     public function getUsername():string
     {
        return $this->email;
@@ -174,9 +174,18 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
     }
 
-    #[Groups("Default")]
+    #[Groups(["Default","read:offer","read:profile:freelancer"])]
     public function getFullName(): string
     {
         return sprintf('%s %s',$this->firstName,$this->lastName);
     }
+
+    /**
+     * @return ArrayCollection|Collection
+     */
+    public function getOffers(): ArrayCollection|Collection
+    {
+        return $this->offers;
+    }
+
 }

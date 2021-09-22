@@ -27,7 +27,7 @@ class Skill
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank]
-    #[Groups(["read:profile:freelancer","Default","edit:profile"])]
+    #[Groups(["read:profile:freelancer","Default","edit:profile","read:offer","read:enterprise"])]
     private ?string $name = null;
 
     /**

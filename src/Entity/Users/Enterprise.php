@@ -4,6 +4,7 @@ namespace App\Entity\Users;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -11,15 +12,19 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 #[
     ApiResource(
+
         itemOperations: [
-            'GET' => [],
+            'GET' => [
+                'normalization_context' => ['groups' => ["read:enterprise"]],
+            ],
             'DELETE' => [],
             'PUT' => []
         ],
         collectionOperations: [
             "POST" => [
                 'validation_groups' => ['create:user']
-            ]
+            ],
+            "GET" => []
         ],
     )
 ]
@@ -32,14 +37,19 @@ class Enterprise extends User
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank(groups: ['create:user',"edit:profile"])]
+
+    #[Groups(["read:offer","Default","read:enterprise"])]
     private ?string $enterpriseName = '';
 
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank(groups: ['create:user',"edit:profile"])]
+    #[Groups(["read:offer","Default","read:enterprise"])]
     private ?string $legalStatus = '';
 
+
+    #[Groups("read:enterprise")]
     public function getRoles():array
     {
         return ["Enterprise"];

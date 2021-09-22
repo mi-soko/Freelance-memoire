@@ -13,7 +13,7 @@ trait IdTrait
      * @ORM\Id()
      * @ORM\Column(type="bigint")
      */
-    #[Groups(["read:id","Default","edit:profile"])]
+    #[Groups(["read:id","Default","edit:profile","read:offer","read:enterprise"])]
     protected ?int $id = null;
 
     /**

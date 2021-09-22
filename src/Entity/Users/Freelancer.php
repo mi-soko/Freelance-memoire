@@ -22,7 +22,9 @@ use Symfony\Component\Validator\Constraints\Valid;
                 'denormalization_context' => ['groups' => ["edit:profile","Default"]],
             ],
             'DELETE' => [],
-            "GET" => []
+            "GET" => [
+                'normalization_context' => ['groups' => ["read:profile:freelancer"]],
+            ]
         ],
         collectionOperations: [
             "POST" => [

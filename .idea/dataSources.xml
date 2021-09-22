@@ -8,11 +8,11 @@
       <jdbc-url>jdbc:mysql://localhost:3306/freelance</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="db@localhost" uuid="158d147b-a0ac-4607-9b4f-5cb740faa2ae">
+    <data-source source="LOCAL" name="freelance@localhost" uuid="158d147b-a0ac-4607-9b4f-5cb740faa2ae">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/freelance</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  *  @ORM\Entity()
  */
-#[
+#[  
     ApiResource(
         denormalizationContext: [
             'groups' => ["read:profile:freelancer","Default","edit:profile"]
@@ -31,7 +31,7 @@ class Language
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank]
-    #[Groups(["read:profile:freelancer","Default"])]
+    #[Groups(["read:profile:freelancer","Default","read:enterprise"])]
     protected ?string $name = null;
 
     /**
