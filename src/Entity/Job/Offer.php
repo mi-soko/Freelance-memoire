@@ -200,6 +200,14 @@ class Offer
     }
 
 
+    /**
+     * @return ArrayCollection|Collection
+     */
+    public function getPostulations(): ArrayCollection|Collection
+    {
+        return $this->postulations;
+    }
+
 
 
 

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *  @ORM\Entity()
@@ -28,6 +29,7 @@ class PostulationDetail
     /**
      * @ORM\Column(type="text",nullable=false)
      */
+
     private ?string $message = null;
 
     /**
@@ -37,6 +39,7 @@ class PostulationDetail
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Users\Freelancer", inversedBy="postulations")
      */
+    #[Groups(["read:offer"])]
     private Freelancer $freelancers;
 
     /**
@@ -51,10 +54,57 @@ class PostulationDetail
     private Collection $enclosed;
 
 
-    #[Pure] public function __construct()
+     public function __construct()
     {
         $this->enclosed = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
+
+
+    /**
+     * @return string|null
+     */
+    public function getMessage(): ?string
+    {
+        return "Pas de message";
+    }
+
+    /**
+     * @return Freelancer
+     */
+    public function getFreelancers(): Freelancer
+    {
+        return $this->freelancers;
+    }
+
+    /**
+     * @param string|null $message
+     */
+    public function setMessage(?string $message): void
+    {
+        $this->message = $message;
+
+    }
+
+    /**
+     * @param Offer $offer
+     */
+    public function setOffer(Offer $offer): void
+    {
+        $this->offer = $offer;
+    }
+
+    /**
+     * @param Freelancer $freelancers
+     */
+    public function setFreelancers(Freelancer $freelancers): void
+    {
+        $this->freelancers = $freelancers;
+    }
+
+
+    
+
 
 
 }

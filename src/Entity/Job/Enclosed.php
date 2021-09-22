@@ -4,6 +4,7 @@ namespace App\Entity\Job;
 
 use App\Entity\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *  @ORM\Entity()
@@ -21,6 +22,7 @@ class Enclosed
     /**
      * @ORM\Column(type="text",nullable=false)
      */
+    #[Groups(["read:offer"])]
     private ?string $file = null;
 
     /**
