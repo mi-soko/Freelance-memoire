@@ -50,11 +50,10 @@ class PostulationController extends AbstractController
         ]);
     }
 
-    #[Route(path: "/api/postulation/annuler/{postulationId}", name: 'postulation')]
+    #[Route(path: "/api/postulation/annuler/{postulationId}", name: 'postulation_cancul')]
 
     public function cancul(string $postulationId):JsonResponse
     {
-
 
         $id = (int) $postulationId;
 

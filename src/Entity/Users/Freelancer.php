@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints\Valid;
             'PUT' => [
                 'validation_groups' => ["edit:profile"],
                 'denormalization_context' => ['groups' => ["edit:profile","Default"]],
+                'normalization_context' => ['groups' => ["read:profile:freelancer"]],
             ],
             'DELETE' => [],
             "GET" => [
