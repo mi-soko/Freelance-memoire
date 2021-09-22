@@ -2,16 +2,22 @@
 
 namespace App\Entity\Skills;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 
 /**
  * @ORM\Entity()
  */
+#[
+    ApiResource
+]
 class Skill
 {
 
@@ -20,6 +26,8 @@ class Skill
     /**
      * @ORM\Column(type="string",length=255,nullable=false)
      */
+    #[NotBlank]
+    #[Groups(["read:profile:freelancer","Default","edit:profile"])]
     private ?string $name = null;
 
     /**
@@ -38,5 +46,19 @@ class Skill
         $this->freelancers = new ArrayCollection();
     }
 
+    /**
+     * @param string|null $name
+     */
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
 
 }

@@ -6,15 +6,23 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\IdTrait;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  *  @ORM\Entity()
  */
 #[
-    ApiResource
+    ApiResource(
+        denormalizationContext: [
+            'groups' => ["read:profile:freelancer","Default","edit:profile"]
+        ],
+        normalizationContext: [
+            'groups' => ["read:profile:freelancer","Default"]
+        ]
+    )
 
-    ]
+]
 class Language
 {
     use IdTrait;
@@ -23,6 +31,7 @@ class Language
      * @ORM\Column(type="string",length=255,nullable=false)
      */
     #[NotBlank]
+    #[Groups(["read:profile:freelancer","Default"])]
     protected ?string $name = null;
 
     /**

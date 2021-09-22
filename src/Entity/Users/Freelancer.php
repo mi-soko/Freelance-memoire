@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Users;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Entity\Skills\Language;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,9 +16,10 @@ use Symfony\Component\Validator\Constraints\Valid;
 #[
     ApiResource(
 
-        itemOperations: [
+            itemOperations: [
             'PUT' => [
-                'validation_groups' => ["edit:profile"]
+                'validation_groups' => ["edit:profile"],
+                'denormalization_context' => ['groups' => ["edit:profile","Default"]],
             ],
             'DELETE' => [],
             "GET" => []
@@ -43,14 +45,14 @@ class Freelancer extends User
      * @ORM\Column(type="text",length=255,nullable=true)
      */
     #[NotBlank(groups: ["edit:profile"])]
-    #[Groups("read:profile:freelancer")]
+    #[Groups(["read:profile:freelancer","edit:profile"])]
     private ?string $description = null;
 
     /**
      * @ORM\Column(type="string",length=255,nullable=true)
      */
     #[NotBlank(groups: ["edit:profile"])]
-    #[Groups(["read:profile:freelancer"])]
+    #[Groups(["read:profile:freelancer","edit:profile"])]
     private ?string $speciality = null;
 
     /**
@@ -58,30 +60,30 @@ class Freelancer extends User
      */
     #[Valid(groups: ['edit:profile'])]
     #[Groups(["read:profile:freelancer"])]
-    private Collection $experience;
+    private  $experience;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Skills\Skill", inversedBy="freelancers")
      * @ORM\JoinTable(name="competences_for_freelancers")
      */
     #[Valid(groups: ['profile'])]
-    #[Groups(["read:profile:freelancer"])]
-    private Collection $skills;
+    #[Groups(["read:profile:freelancer","edit:profile"])]
+    private  $skills;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Skills\Language", inversedBy="freelancers")
      * @ORM\JoinTable(name="languages_for_freelancers")
      */
     #[Valid(groups: ['profile'])]
-    #[Groups(["read:profile:freelancer"])]
-    private Collection $languages;
+    #[Groups(["read:profile:freelancer","edit:profile"])]
+    private $languages;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Job\PostulationDetail", mappedBy="freelancers")
      */
     #[Valid(groups: ['profile'])]
     #[Groups(["read:profile:freelancer"])]
-    private Collection $postulations;
+    private $postulations;
 
 
 
@@ -149,34 +151,28 @@ class Freelancer extends User
         $this->experience = $experience;
     }
 
-    /**
-     * @return ArrayCollection|Collection
-     */
-    public function getSkills(): ArrayCollection|Collection
+
+    public function getSkills():array
     {
-        return $this->skills;
+        return $this->skills->getValues();
     }
 
-    /**
-     * @param ArrayCollection|Collection $skills
-     */
-    public function setSkills(ArrayCollection|Collection $skills): void
+
+    public function setSkills($skills): void
     {
         $this->skills = $skills;
     }
 
     /**
-     * @return ArrayCollection|Collection
+     * @return array
      */
-    public function getLanguages(): ArrayCollection|Collection
+    public function getLanguages(): array
     {
-        return $this->languages;
+        return $this->languages->getValues();
     }
 
-    /**
-     * @param ArrayCollection|Collection $languages
-     */
-    public function setLanguages(ArrayCollection|Collection $languages): void
+
+    public function setLanguages($languages): void
     {
         $this->languages = $languages;
     }
@@ -201,7 +197,6 @@ class Freelancer extends User
     {
         return $this->experience->count();
     }
-
 
 
 }

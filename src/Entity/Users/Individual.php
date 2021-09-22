@@ -16,7 +16,12 @@ use Doctrine\ORM\Mapping as ORM;
                 'denormalization_context' => ['groups' => ['profile','Default']],
             ],
             'DELETE' => []
-        ]
+        ],
+        collectionOperations: [
+            "POST" => [
+                'validation_groups' => ['create:user']
+            ]
+        ],
     )
 ]
 class Individual extends User

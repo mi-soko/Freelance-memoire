@@ -20,7 +20,7 @@ use App\Repository\Users\UserRepository;
 /**
  * @method string getUserIdentifier()
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity("email",repositoryMethod="findByUniqueEmail")
+ * @UniqueEntity("email",repositoryMethod="findByUniqueEmail",groups={"Default","create:user"})
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
  * @ORM\DiscriminatorMap({"enterprise" = "Enterprise", "individual" = "Individual","freelancer" = "Freelancer"})
